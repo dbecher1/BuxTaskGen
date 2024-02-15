@@ -1,0 +1,33 @@
+# Month/Day are always of the first monday of that week
+month: 2
+date: 12
+year: 2024
+daily:
+  AM: [
+    "Front of House Drains",
+    "Sweep and Mop Back of House",
+    "Station Assessment Cleaning",
+  ]
+  MID: [
+    "Oven Cleaning",
+    "Clover Vertica Hoppers",
+    "Backsplashes/Syrup Stands",
+    "Sweep & Mop Behind Fridges",
+  ]
+  PM: [
+    "Back of House Drains",
+    "Milk Fridge Organizing/Cleaning",
+    "Floors (Lobby & Backline)",
+    "Bar Breakdown",
+    "Clover Vertica Cleaning Cycle",
+  ]
+
+sunday:
+  AM: [
+    "Lid Stands",
+  ]
+
+tuesday:
+  PM: [
+    "Nitro Cleaning"
+  ]
