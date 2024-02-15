@@ -23,7 +23,7 @@ jobs:
         # conda env update --file environment.yml --name base
         conda install pyyaml
         conda install reportlab
-        conda install pypdf
+        conda-forge install pypdf
     - name: Lint with flake8
       run: |
         conda install flake8
