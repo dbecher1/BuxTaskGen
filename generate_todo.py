@@ -1,7 +1,7 @@
 import yaml
 from io import BytesIO
 from simple_date_helper import SimpleDate
-from pypdf import PdfMerger
+from pypdf import PdfWriter
 from reportlab.lib.colors import black
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.units import inch
@@ -11,30 +11,20 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 
 ### GLOBAL VALUES, LOAD DATA AND PARSE ###
 
-buffer_list = []
-
 SAVE_NAME_FINAL = 'out.pdf'
-TEMP_FILES_LOC = 'temp/'
 DATA_FILE_NAME = "data.yml"
+
 with open(DATA_FILE_NAME, 'r') as file:
     data_raw = yaml.safe_load(file)
 
-#print(data_raw)
+print(data_raw) # uncomment for debug print
+
 m = data_raw['month']
 d = data_raw['date']
 y = data_raw['year']
-
 date_obj = SimpleDate(m, d, y)
 
 # TODO: remove dummy data once yaml parsing is implemented
-
-data = [
-["AM (open-11)", "Initials",],
-["Front of House Drains", "",],
-["Front of House Drains", "",],
-["Mid (11-2)", "",],
-["Front of House Drains", "",],
-]
 
 def gen_document():
 
@@ -42,10 +32,8 @@ def gen_document():
 
     buffer = BytesIO()
 
-    offset = date_obj.get_offset()
+    weekday = date_obj.get_offset_as_weekday()
     date_text_raw = date_obj.get_date()
-
-    SAVE_NAME = TEMP_FILES_LOC + 'out_' + str(offset + 1) + '.pdf'
 
     doc = SimpleDocTemplate(buffer,
                             pagesize=LETTER,
@@ -95,10 +83,34 @@ def gen_document():
     # The first style set will always be the same
     style.add('FONT', (0, 0), (1, 0), 'Helvetica-Bold')
 
+    # Generate the daily tasks from the parsed data
+    # Start with daily tasks
+    am_tasks = data_raw['daily']['AM']
+    mid_tasks = data_raw['daily']['MID']
+    pm_tasks = data_raw['daily']['PM']
+
+    # Check for weekday specific tasks
+    if weekday in data_raw:
+        weekday_specific_tasks = data_raw[weekday]
+        if 'AM' in weekday_specific_tasks:
+            am_tasks.append(weekday_specific_tasks['AM'])
+        if 'MID' in weekday_specific_tasks:
+            mid_tasks.append(weekday_specific_tasks['MID'])
+        if 'PM' in weekday_specific_tasks:
+            pm_tasks.append(weekday_specific_tasks['PM'])
+
     # The next two have to be determined programatically
     style.add('FONT', (0, 3), (0, 3), 'Helvetica-Bold')
 
-    t=Table(data)
+    data = [
+    ["AM (open-11)", "Initials",],
+    ["Front of House Drains", "",],
+    ["Front of House Drains", "",],
+    ["Mid (11-2)", "",],
+    ["Front of House Drains", "",],
+    ]
+
+    t = Table(data)
     t.setStyle(style)
 
     ### INVENTORY TRACKING ###
@@ -124,14 +136,12 @@ def gen_document():
     ### SAVE FILE ###
 
     doc.build(elements)
-    buffer_list.append(buffer)
+    return buffer
 
-merger = PdfMerger()
+merger = PdfWriter()
 for _ in range(7):
-    gen_document()
-
-for buf in buffer_list:
-    merger.append(buf)
+    page = gen_document()
+    merger.append(page)
 
 merger.write(SAVE_NAME_FINAL)
 merger.close()

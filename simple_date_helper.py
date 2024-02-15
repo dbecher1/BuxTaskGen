@@ -18,10 +18,10 @@ class SimpleDate:
         out += str(self.month) + '/' + str(self.day)
         self.increment_date()
         return out
-    
-    # returns 0-6 for Monday-Sunday
-    def get_offset(self) -> int:
-        return self.offset % 7
+        
+    # returns Monday-Sunday, lowercase
+    def get_offset_as_weekday(self) -> int:
+        return WEEKDAY_ENUM[self.offset % 7].lower()
 
     def increment_date(self) -> None:
         self.offset += 1
