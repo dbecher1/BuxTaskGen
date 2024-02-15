@@ -47,7 +47,7 @@ def gen_document():
 
     SAVE_NAME = TEMP_FILES_LOC + 'out_' + str(offset + 1) + '.pdf'
 
-    doc = SimpleDocTemplate(SAVE_NAME,
+    doc = SimpleDocTemplate(buffer,
                             pagesize=LETTER,
                             rightMargin=30,
                             leftMargin=30,
@@ -124,7 +124,14 @@ def gen_document():
     ### SAVE FILE ###
 
     doc.build(elements)
+    buffer_list.append(buffer)
 
 merger = PdfMerger()
-for n in range(7):
+for _ in range(7):
     gen_document()
+
+for buf in buffer_list:
+    merger.append(buf)
+
+merger.write(SAVE_NAME_FINAL)
+merger.close()
