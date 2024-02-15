@@ -25,6 +25,10 @@ jobs:
       - name: Run script
         run: |
           python generate_todo.py
+
+      - name: Pull
+        run: |
+          git pull
           
       - name: Commit
         run: |
