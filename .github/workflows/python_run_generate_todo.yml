@@ -6,14 +6,15 @@ on:
      - cron: '0-59/5 * * * *'
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Python 3.10
-      - uses: actions/setup-python@v3
+        uses: actions/setup-python@v3
         with:
           python-version: '3.10'
           
@@ -25,7 +26,8 @@ jobs:
           pip install reportlab
           
       - name: Run script
-        run: python generate_todo.py
+        run: |
+          python generate_todo.py
           
       - name: Commit
         run: |
