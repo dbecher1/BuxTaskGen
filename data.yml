@@ -1,7 +1,4 @@
-# Month/Day are always of the first monday of that week
-month: 2
-date: 12
-year: 2024
+
 daily:
   AM: [
     "Front of House Drains",

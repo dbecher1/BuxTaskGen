@@ -1,6 +1,6 @@
 import yaml
 from io import BytesIO
-from simple_date_helper import SimpleDate
+from date_helper import DateHelper
 from pypdf import PdfWriter
 from reportlab.lib.colors import black
 from reportlab.lib.enums import TA_CENTER
@@ -19,10 +19,7 @@ with open(DATA_FILE_NAME, 'r') as file:
 
 #print(data_raw) # uncomment for debug print
 
-m = data_raw['month']
-d = data_raw['date']
-y = data_raw['year']
-date_obj = SimpleDate(m, d, y)
+date_obj = DateHelper()
 
 # Generates one page and returns a byte stream representation of it
 def gen_document() -> BytesIO:

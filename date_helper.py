@@ -1,14 +1,16 @@
+from datetime import datetime
 # Python's build in datetime library's dates are immutable
-# Plus I'd rather just write a small util class than import -more- external stuff
+# So using that to just programatically pull the date and then make this helper object
 
 WEEKDAY_ENUM = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-class SimpleDate:
+class DateHelper:
     # Given a month/day that is always given to be the first monday of a week, constructs a nifty little helper
-    def __init__(self, month=1, day=1, year=2024) -> None:
-        self.year = year
-        self.month = month
-        self.day = day
+    def __init__(self) -> None:
+        curr = datetime.now()
+        self.year = curr.year
+        self.month = curr.month
+        self.day = curr.day
         self.offset = 0
 
     # Returns a string representation of the weekday/month/date (e.g. Monday, 2/12)
