@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Python 3.10
       - uses: actions/setup-python@v3
         with:
@@ -31,8 +33,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A
           git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
-          
-      - name: Push
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          branch: main 
+          git push
+      #- name: Push
+       # uses: ad-m/github-push-action@v0.6.0
+        #with:
+         # branch: main 
