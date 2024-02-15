@@ -132,14 +132,12 @@ def gen_document() -> BytesIO:
     doc.build(elements)
     return buffer
 
-if __name__ == '__main__':
+# Run the function 7 times; updates for days of week and conditionals are all taken care of
 
-    # Run the function 7 times; updates for days of week and conditionals are all taken care of
+merger = PdfWriter()
+for _ in range(7):
+    page = gen_document()
+    merger.append(page)
 
-    merger = PdfWriter()
-    for _ in range(7):
-        page = gen_document()
-        merger.append(page)
-
-    merger.write(SAVE_NAME)
-    merger.close()
+merger.write(SAVE_NAME)
+merger.close()
