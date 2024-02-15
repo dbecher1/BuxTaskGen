@@ -25,11 +25,12 @@ class SimpleDate:
 
     def increment_date(self) -> None:
         self.offset += 1
-        # Test the
+        # Feb
         if self.month == 2:
             num_days = 28
             if self.year % 4 == 0:
                 num_days += 1
+        # April, June, Sept, Nov
         elif (self.month) == 4 or (self.month) == 6 or (self.month) == 9 or (self.month == 11):
             num_days = 30
         else:
