@@ -26,6 +26,11 @@ jobs:
       - name: Pull
         run: |
           git pull
+
+      - name: Clean
+        run: |
+          rm out/*.pdf
+          git rm out/*.pdf --cached
           
       - name: Commit
         run: |
