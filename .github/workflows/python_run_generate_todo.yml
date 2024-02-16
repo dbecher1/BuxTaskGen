@@ -2,8 +2,7 @@ name: run generate_todo.py
 
 on:
   schedule:
-     #- cron: '0 2 * * 1' # At 02:00 on Monday
-     - cron: '0-59/5 * * * *'
+     - cron: '0 2 * * 1' # At 02:00 on Monday
 
 jobs:
   build-linux:
@@ -11,8 +10,6 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
-        #with:
-        #  token: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
         with:
