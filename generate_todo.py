@@ -11,15 +11,15 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 
 ### GLOBAL VALUES, LOAD DATA AND PARSE ###
 
-SAVE_NAME = 'out.pdf'
+date_obj = DateHelper()
+
+SAVE_NAME = 'out/out_' + date_obj.get_date() + '.pdf'
 DATA_FILE_NAME = "data.yml"
 
 with open(DATA_FILE_NAME, 'r') as file:
     data_raw = yaml.safe_load(file)
 
 #print(data_raw) # uncomment for debug print
-
-date_obj = DateHelper()
 
 # Generates one page and returns a byte stream representation of it
 def gen_document() -> BytesIO:
@@ -29,7 +29,7 @@ def gen_document() -> BytesIO:
     buffer = BytesIO()
 
     weekday = date_obj.get_offset_as_weekday()
-    date_text_raw = date_obj.get_date()
+    date_text_raw = date_obj.get_date_pretty_and_incr()
 
     doc = SimpleDocTemplate(buffer)
     doc.pagesize = portrait(LETTER)

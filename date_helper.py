@@ -13,9 +13,14 @@ class DateHelper:
         self.day = curr.day
         self.offset = 0
 
-    # Returns a string representation of the weekday/month/date (e.g. Monday, 2/12)
-    # It then increments its offset to be used for the next call
+    # Returns a string representation of the month/date/year (e.g. 2_12_24)
+    # Does NOT increment the offset/date
     def get_date(self) -> str:
+        return "{m}_{d}_{y}".format(m=self.month, d=self.day, y=(self.year % 100))
+
+    # Returns a (pretty) string representation of the weekday/month/date (e.g. Monday, 2/12)
+    # It then increments its offset to be used for the next call
+    def get_date_pretty_and_incr(self) -> str:
         out = WEEKDAY_ENUM[self.offset % 7] + ', '
         out += str(self.month) + '/' + str(self.day)
         self.increment_date()
