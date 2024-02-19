@@ -27,12 +27,6 @@ jobs:
         run: |
           git pull
 
-      - name: Clean
-        run: |
-          touch out/a.pdf
-          rm out/*.pdf -f
-          git rm out/*.pdf --cached
-
       - name: Run script
         run: |
           python generate_todo.py
