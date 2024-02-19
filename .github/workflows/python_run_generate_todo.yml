@@ -29,6 +29,7 @@ jobs:
 
       - name: Clean
         run: |
+          touch out/a.pdf
           rm out/*.pdf -f
           git rm out/*.pdf --cached
 
