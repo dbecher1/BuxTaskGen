@@ -1,8 +1,12 @@
+
 name: run generate_todo.py
 
 on:
   schedule:
      - cron: '0 2 * * 1' # At 02:00 on Monday
+  push:
+    branches:
+      - main
 
 jobs:
   build-linux:
@@ -18,10 +22,6 @@ jobs:
       - name: Install dependencies
         run: |
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          
-      - name: Run script
-        run: |
-          python generate_todo.py
 
       - name: Pull
         run: |
@@ -31,6 +31,10 @@ jobs:
         run: |
           rm out/*.pdf
           git rm out/*.pdf --cached
+
+      - name: Run script
+        run: |
+          python generate_todo.py
           
       - name: Commit
         run: |
