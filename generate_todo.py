@@ -1,6 +1,6 @@
 import yaml
+import datetime
 from io import BytesIO
-from date_helper import DateHelper
 from pypdf import PdfWriter
 from reportlab.lib.colors import black
 from reportlab.lib.enums import TA_CENTER
@@ -11,32 +11,51 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 
 ### GLOBAL VALUES, LOAD DATA AND PARSE ###
 
-date_obj = DateHelper()
+WEEKDAY_ENUM = ['Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday',
+                'Sunday']
 
-SAVE_NAME = 'out/out_' + date_obj.get_date() + '.pdf'
+# Date object: set to monday if today is not monday
+today = datetime.date.today()
+if today.weekday() != 0:
+    today = today - datetime.timedelta(days=today.weekday())
+
+SAVE_NAME = 'out/' + str(today) + '.pdf'
 DATA_FILE_NAME = "data.yml"
 
 with open(DATA_FILE_NAME, 'r') as file:
     data_raw = yaml.safe_load(file)
 
-#print(data_raw) # uncomment for debug print
-
 # Generates one page and returns a byte stream representation of it
 def gen_document() -> BytesIO:
 
     ### VARIABLES AND INITIAL INSTANTIATION ###
-
+    global today
     buffer = BytesIO()
 
-    weekday = date_obj.get_offset_as_weekday()
-    date_text_raw = date_obj.get_date_pretty_and_incr()
+    # weekdays are stored in lower case in the YAML file
+    weekday = WEEKDAY_ENUM[today.weekday()].lower()
+    date_text_raw = '{}, {}/{}'.format(
+            WEEKDAY_ENUM[today.weekday()],
+            today.month % 10 if today.month < 10
+            else today.month,
+            today.day)
+    
+    # increment the day for the next loop iteration
+    today = today + datetime.timedelta(days=1)
 
+    # PDF variables
     doc = SimpleDocTemplate(buffer)
     doc.pagesize = portrait(LETTER)
-
     elements = []
 
-    ### HEADER ###
+    #######################
+    ### DOCUMENT HEADER ###
+    #######################
 
     header_style = ParagraphStyle('HeaderStyle', fontSize = 16, alignment = TA_CENTER)
     header_text = Paragraph('<b><u>Cleaning Tasks (Daypart Assignments)</u></b>', header_style)
@@ -132,7 +151,7 @@ def gen_document() -> BytesIO:
     doc.build(elements)
     return buffer
 
-# Run the function 7 times; updates for days of week and conditionals are all taken care of
+# Run the function 7 times to populate the week
 
 merger = PdfWriter()
 for _ in range(7):
