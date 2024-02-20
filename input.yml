@@ -6,7 +6,6 @@ daily:
     "Station Assessment Cleaning",
   ]
   MID: [
-    "Oven Cleaning",
     "Clover Vertica Hoppers",
     "Backsplashes/Syrup Stands",
     "Sweep & Mop Behind Fridges",
@@ -19,12 +18,35 @@ daily:
     "Clover Vertica Cleaning Cycle",
   ]
 
-sunday:
-  AM: [
-    "Lid Stands",
+monday:
+  MID: [
+    "Oven Cleaning",
   ]
 
 tuesday:
+  MID: [
+    "Oven Cleaning",
+  ]
   PM: [
     "Nitro Cleaning"
+  ]
+
+wednesday:
+  MID: [
+    "Oven Cleaning",
+  ]
+
+thursday:
+  MID: [
+    "Oven Cleaning",
+  ]
+
+friday:
+  MID: [
+    "Oven Cleaning",
+  ]
+
+sunday:
+  AM: [
+    "Lid Stands",
   ]
