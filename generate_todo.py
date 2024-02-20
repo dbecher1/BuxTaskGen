@@ -94,7 +94,7 @@ def gen_document() -> BytesIO:
                 am_tasks.append(am)
         if 'MID' in data_raw[weekday]:
             for mid in data_raw[weekday]['MID']:
-                mid_tasks.append()
+                mid_tasks.append(mid)
         if 'PM' in data_raw[weekday]:
             for pm in data_raw[weekday]['PM']:
                 pm_tasks.append(pm)
