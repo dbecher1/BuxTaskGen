@@ -25,7 +25,7 @@ if today.weekday() != 0:
     today = today - datetime.timedelta(days=today.weekday())
 
 SAVE_NAME = 'out/' + str(today) + '.pdf'
-DATA_FILE_NAME = "data.yml"
+DATA_FILE_NAME = "input.yml"
 
 with open(DATA_FILE_NAME, 'r') as file:
     data_raw = yaml.safe_load(file)
