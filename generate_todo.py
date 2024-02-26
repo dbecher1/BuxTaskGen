@@ -6,7 +6,7 @@ from reportlab.lib.colors import black
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.units import inch
 from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.pagesizes import LETTER, portrait
+from reportlab.lib.pagesizes import LETTER, portrait, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 
 ### GLOBAL VALUES, LOAD DATA AND PARSE ###
@@ -50,7 +50,7 @@ def gen_document() -> BytesIO:
 
     # PDF variables
     doc = SimpleDocTemplate(buffer)
-    doc.pagesize = portrait(LETTER)
+    doc.pagesize = landscape(LETTER)
     elements = []
 
     #######################
