@@ -1,4 +1,6 @@
 
+use_date: false
+
 daily:
   AM: [
     "Front of House Drains",

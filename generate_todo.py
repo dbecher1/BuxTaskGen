@@ -24,11 +24,21 @@ today = datetime.date.today()
 if today.weekday() != 0:
     today = today - datetime.timedelta(days=today.weekday())
 
-SAVE_NAME = 'out/' + str(today) + '.pdf'
 DATA_FILE_NAME = "input.yml"
 
 with open(DATA_FILE_NAME, 'r') as file:
     data_raw = yaml.safe_load(file)
+
+use_date = data_raw['use_date']
+
+if use_date:
+    # If using date go to nearest monday
+    if today.weekday() != 0:
+        today = today - datetime.timedelta(days=today.weekday())
+    SAVE_NAME = 'out/' + str(today) + '.pdf'
+else:
+    # If not just use today's date in the filename
+    SAVE_NAME = 'out/' + 'nodate_' + str(today) + '.pdf'
 
 # Generates one page and returns a byte stream representation of it
 def gen_document() -> BytesIO:
@@ -63,7 +73,10 @@ def gen_document() -> BytesIO:
     date_style = ParagraphStyle('DateStyle', fontSize = 14, alignment = TA_CENTER)
     date_text = Paragraph(date_text_raw, date_style)
 
-    header = Table([[header_text], [date_text]], colWidths=None)
+    if use_date:
+        header = Table([[header_text], [date_text]], colWidths=None)
+    else:
+        header = Table([[header_text]], colWidths=None)
     header.setStyle(TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -87,8 +100,8 @@ def gen_document() -> BytesIO:
     mid_tasks = list(data_raw['daily']['MID'])
     pm_tasks = list(data_raw['daily']['PM'])
 
-    # Check for weekday specific tasks
-    if weekday in data_raw:
+    # Check for weekday specific tasks if using date
+    if use_date and weekday in data_raw:
         if 'AM' in data_raw[weekday]:
             for am in data_raw[weekday]['AM']:
                 am_tasks.append(am)
@@ -98,6 +111,22 @@ def gen_document() -> BytesIO:
         if 'PM' in data_raw[weekday]:
             for pm in data_raw[weekday]['PM']:
                 pm_tasks.append(pm)
+    elif not use_date:
+        # Manually enumerate through the weekdays and add tasks if they exist in the YAML
+        for wd in [str.lower(w) for w in WEEKDAY_ENUM if w.lower() in data_raw]:
+
+            # quick and dirty implementation, could be done with less code reuse so maybe TODO eventually
+
+            if 'AM' in data_raw[wd]:
+                for am in [a for a in data_raw[wd]['AM'] if a not in am_tasks]:
+                    # Make sure no dup
+                    am_tasks.append(am)
+            if 'MID' in data_raw[wd]:
+                for mid in [m for m in data_raw[wd]['MID'] if m not in mid_tasks]:
+                    mid_tasks.append(mid)
+            if 'PM' in data_raw[wd]:
+                for pm in [p for p in data_raw[wd]['PM'] if p not in pm_tasks]:
+                    pm_tasks.append(pm)
      
     mid_index = 1
     pm_index = 2
@@ -151,10 +180,16 @@ def gen_document() -> BytesIO:
     doc.build(elements)
     return buffer
 
-# Run the function 7 times to populate the week
+# Run the function 7 times to populate the week or once if no date
+
+if use_date:
+    page_ct = 7
+else:
+    page_ct = 1
 
 merger = PdfWriter()
-for _ in range(7):
+
+for _ in range(page_ct):
     page = gen_document()
     merger.append(page)
 
